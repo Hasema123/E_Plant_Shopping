@@ -1,35 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeItem, updateQuantity } from './CreatSlice';
+import { addItem, decreaseQuantity, removeItem} from './CreateSl';
 import './CartItem.css';
 
 const Cart = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
+  var plantNumber = useSelector(state => state.cart.plantNumber);
   const dispatch = useDispatch();
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+    let totalAmount = 0;
+    cart.forEach(plant => {
+      totalAmount += plant.quantity * plant.cost;
+    });
+    return totalAmount;
   };
 
   const handleContinueShopping = (e) => {
-   
+    return <ProductList />;
   };
 
-
+  const handleCheckoutShopping = (e) => {
+    alert('Functionality to be added for future reference');
+  };
 
   const handleIncrement = (item) => {
+    dispatch(addItem(item));
   };
 
   const handleDecrement = (item) => {
-   
+    dispatch(decreaseQuantity(item));
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem(item));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    let itemCosts = item.quantity * item.cost;
+    return itemCosts;
   };
 
   return (
@@ -44,7 +55,7 @@ const Cart = ({ onContinueShopping }) => {
               <div className="cart-item-cost">{item.cost}</div>
               <div className="cart-item-quantity">
                 <button className="cart-item-button cart-item-button-dec" onClick={() => handleDecrement(item)}>-</button>
-                <span className="cart-item-quantity-value"></span>
+                <span className="cart-item-quantity-value">{item.quantity}</span>
                 <button className="cart-item-button cart-item-button-inc" onClick={() => handleIncrement(item)}>+</button>
               </div>
               <div className="cart-item-total">Total: ${calculateTotalCost(item)}</div>
