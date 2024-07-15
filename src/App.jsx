@@ -28,6 +28,7 @@ function App() {
          </div>
           <div className="aboutus_container">
           <AboutUs/>
+          <p style={{fontSize: "15Px"}}>Background by lifeforstock on freepik.com</p>
           </div>
           </div>
 

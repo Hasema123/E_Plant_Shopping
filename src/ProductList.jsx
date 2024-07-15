@@ -1,7 +1,11 @@
-import React, { useState,useEffect } from 'react';
-import './ProductList.css'
+import React, { useState, useEffect } from 'react';
+import {useSelector, useDispatch } from "react-redux";
+import {addItem, removeItem, updateQuantity} from "./CreateSl.jsx";
+
+import './ProductList.css';
+
 function ProductList() {
-  
+
     const plantsArray = [
         {
             category: "Air Purifying Plants",
@@ -96,7 +100,7 @@ function ProductList() {
                 },
                 {
                     name: "Marigold",
-                    image:"https://cdn.pixabay.com/photo/2022/02/22/05/45/marigold-7028063_1280.jpg",
+                    image: "https://cdn.pixabay.com/photo/2022/02/22/05/45/marigold-7028063_1280.jpg",
                     description: "Natural insect repellent, also adds color to the garden.",
                     cost: "$8"
                 },
@@ -209,53 +213,84 @@ function ProductList() {
             ]
         }
     ];
-   const styleObj={
-    backgroundColor: '#4CAF50',
-    color: '#fff!important',
-    padding: '15px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignIems: 'center',
-    fontSize: '20px',
-   }
-   const styleObjUl={
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '1100px',
-   }
-   const styleA={
-    color: 'white',
-    fontSize: '30px',
-    textDecoration: 'none',
-   }
+    const styleObj = {
+        backgroundColor: '#4CAF50',
+        color: '#fff!important',
+        padding: '15px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignIems: 'center',
+        fontSize: '20px',
+    }
+    const styleObjUl = {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '1100px',
+    }
+    const styleA = {
+        color: 'white',
+        fontSize: '30px',
+        textDecoration: 'none',
+    }
+    const stylePlantOutput = {
+        display: "flex",
+        gap: "10Px",
+        padding: "10Px"
+    }
+
+    const [addedToCart, setAddedToCart] = useState([]);
+
+    function handleAddToCart(plant){
+        setAddedToCart(...addedToCart,{key: plant.name, value: true});
+        dispatch(addItem(addedToCart));
+    }
+
     return (
         <div>
-             <div className="navbar" style={styleObj}>
-            <div className="tag">
-               <div className="luxury">
-               <img src="https://cdn.pixabay.com/photo/2020/08/05/13/12/eco-5465432_1280.png" alt="" />
-               <a href="/" style={{textDecoration:'none'}}>
-                        <div>
-                    <h3 style={{color:'white'}}>Paradise Nursery</h3>
-                    <i style={{color:'white'}}>Where Green Meets Serenity</i>
+            <div className="navbar" style={styleObj}>
+                <div className="tag">
+                    <div className="luxury">
+                        <img src="https://cdn.pixabay.com/photo/2020/08/05/13/12/eco-5465432_1280.png" alt="" />
+                        <a href="/" style={{ textDecoration: 'none' }}>
+                            <div>
+                                <h3 style={{ color: 'white' }}>Paradise Nursery</h3>
+                                <i style={{ color: 'white' }}>Where Green Meets Serenity</i>
+                            </div>
+                        </a>
                     </div>
-                    </a>
+
                 </div>
-              
+                <div style={styleObjUl}>
+                    <div> <a href="#" style={styleA}>Plants</a></div>
+                    <div> <a href="#" style={styleA}><h1 className='cart'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68"><rect width="156" height="156" fill="none"></rect><circle cx="80" cy="216" r="12"></circle><circle cx="184" cy="216" r="12"></circle><path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8" fill="none" stroke="#faf9f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" id="mainIconPathAttribute"></path></svg></h1></a></div>
+                </div>
             </div>
-            <div style={styleObjUl}>
-                <div> <a href="#" style={styleA}>Plants</a></div>
-                <div> <a href="#" style={styleA}><h1 className='cart'><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68"><rect width="156" height="156" fill="none"></rect><circle cx="80" cy="216" r="12"></circle><circle cx="184" cy="216" r="12"></circle><path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8" fill="none" stroke="#faf9f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" id="mainIconPathAttribute"></path></svg></h1></a></div>
-            </div>
+
+            {plantsArray.map((group, index) =>
+
+                <div className="product-grid">
+                    <br/><br/><h2 key={index}>{group.category}</h2><br/>
+                    <div className="plants" style={stylePlantOutput}>
+                    {group.plants.map((plant, plantIndex) =>
+                        <div key={plantIndex}>
+                            <img src={plant.image} alt={plant.name} height="100Px"/>
+                            <h3>{plant.name}</h3>
+                            <h4>{plant.description}</h4>
+                            <h4>{plant.cost}</h4>
+                            <input type="button" name="Add to Cart" value="Add to Cart" 
+                            style={{padding: "5Px"}} onClick={() => handleAddToCart(plant)}/>
+                        </div>
+                            )}
+                    </div>
+                </div>
+                            )
+            }
+
+
         </div>
 
-        <div className="product-grid">
 
-
-        </div>
-
-    </div>
     );
 }
 
