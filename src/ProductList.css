@@ -188,6 +188,11 @@ body {
 
     
 }
+
+.cartItem-container.visible {
+    top: 0;
+  }
+  
 /* Add Media Query for responsiveness */
 @media (max-width: 768px) {
     .product-card {

@@ -12,10 +12,10 @@ export const CreateSl = createSlice({
       const existingItem = state.items.find(item => item.name === name);
       if (existingItem) {
         existingItem.quantity++;
-        state.number += 1;
+        state.plantNumber += 1;
       } else {
         state.items.push({ name, image, cost, quantity: 1 });
-        state.number += 1;
+        state.plantNumber += 1;
       }
     },
     decreaseQuantity: (state, action) => {
@@ -23,14 +23,14 @@ export const CreateSl = createSlice({
       const existingItem = state.items.find(item => item.name === name);
       if (existingItem && existingItem.quantity>1) {
         existingItem.quantity--;
-        state.number -= 1;
+        state.plantNumber -= 1;
       } else {
         state.items = state.items.filter(item => item.name !== action.payload);
-        state.number -= 1;
+        state.plantNumber -= 1;
       }
     },
     removeItem: (state, action) => {
-      state.number = state.number -item.quantity;
+      state.plantNumber = state.plantNumber -item.quantity;
       state.items = state.items.filter(item => item.name !== action.payload);
     },
   },
