@@ -214,32 +214,14 @@ function ProductList() {
             ]
         }
     ];
-    const styleObj = {
-        backgroundColor: '#4CAF50',
-        color: '#fff!important',
-        padding: '15px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignIems: 'center',
-        fontSize: '20px',
-    }
-    const styleObjUl = {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '1100px',
-    }
-    const styleA = {
-        color: 'white',
-        fontSize: '30px',
-        textDecoration: 'none',
-    }
+    
     const stylePlantOutput = {
         display: "flex",
         gap: "10Px",
         padding: "10Px"
     }
 
+    var cartItems = useSelector(state => state.cart.items);
     var plantNumber = useSelector(state => state.cart.plantNumber);
     const dispatch = useDispatch();
     const [addedToCart, setAddedToCart] = useState({});
@@ -247,54 +229,48 @@ function ProductList() {
     const handleAddToCart = (plant) => {
         if (plant != null) {
             dispatch(addItem(plant));
-            setAddedToCart((prevState) => ({
-                ...prevState,
-                [plant.name]: true,
-            }));
-        }
-    };
+        };
+    }
 
-    const [showCartList, setshowCartList] = useState(false);
+    useEffect(() => {
+        if (cartItems.length != 0) {
+            if (typeof (addedToCart.entries) == "undefined") {
+                setAddedToCart({});
+                cartItems.forEach(cartItem => {
+                    setAddedToCart((prevState) => ({
+                        ...prevState, [cartItem.name]: true,
+                    }));
+                })
+            }
+            else if (cartItems.length != addedToCart.values.filter(addedItem => addedItem = true).length) {
+                setAddedToCart({});
+                cartItems.forEach(cartItem => {
+                    setAddedToCart((prevState) => ({
+                        ...prevState, [cartItem.name]: true,
+                    }));
+                })
+            }
+        }
+        else{
+            setAddedToCart({});
+        }
+    },[plantNumber])
 
     return (
+        
         <div>
-            <div className="navbar" style={styleObj}>
-                <div className="tag">
-                    <div className="luxury">
-                        <img src="https://cdn.pixabay.com/photo/2020/08/05/13/12/eco-5465432_1280.png" alt="" />
-                        <a href="/" style={{ textDecoration: 'none' }}>
-                            <div>
-                                <h3 style={{ color: 'white' }}>Paradise Nursery</h3>
-                                <i style={{ color: 'white' }}>Where Green Meets Serenity</i>
-                            </div>
-                        </a>
-                    </div>
-
-                </div>
-                <div style={styleObjUl}>
-                    <div> <a href="#" style={styleA}>Plants</a></div>
-                    <div> <a href="#" style={styleA}><h1 className='cart'>{plantNumber}<svg xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68"><rect width="156" height="156" fill="none"></rect>
-                        <circle cx="80" cy="216" r="12"></circle>
-                        <circle cx="184" cy="216" r="12"></circle>
-                        <path d="M42.3,72H221.7l-26.4,92.4A15.9,15.9,0,0,1,179.9,176H84.1a15.9,15.9,0,0,1-15.4-11.6L32.5,37.8A8,8,0,0,0,24.8,32H8"
-                            fill="none" stroke="#faf9f9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" id="mainIconPathAttribute"></path></svg></h1>
-                    </a></div>
-                </div>
-            </div>
-
+            <div id="plants" style={{position: "absolute", top: 0}}></div>
             {plantsArray.map((group, index) =>
-
                 <div className="product-grid">
                     <br /><br /><h2 key={index}>{group.category}</h2><br />
                     <div className="plants" style={stylePlantOutput}>
                         {group.plants.map((plant, plantIndex) =>
-                            <div key={plantIndex}>
-                                <img src={plant.image} alt={plant.name} height="100Px" />
-                                <h3>{plant.name}</h3>
-                                <h4>{plant.description}</h4>
-                                <h4>{plant.cost}</h4>
-                                <input id={"btn" + plantIndex} type="button" name="Add to Cart" value={!addedToCart[plant.name] ? ("Add to Cart") : ("Already Added")}
+                            <div key={plantIndex + group.category}>
+                                <img key={"img" + plantIndex + group.category} src={plant.image} alt={plant.name} height="100Px" />
+                                <h3 key={"name" + plantIndex + group.category}>{plant.name}</h3>
+                                <h4 key={"desc" + plantIndex + group.category}>{plant.description}</h4>
+                                <h4 key={"cost" + plantIndex + group.category}>{plant.cost}</h4>
+                                <input key={"btn" + plantIndex + group.category} type="button" name="Add to Cart" value={!addedToCart[plant.name] ? ("Add to Cart") : ("Already Added")}
                                     style={!addedToCart[plant.name] ? ({ padding: "5Px" }) : ({ padding: "5Px", backgroundColor: "black", color: "white" })}
                                     onClick={!addedToCart[plant.name] ? (() => handleAddToCart(plant)) : (() => handleAddToCart(null))} />
                             </div>
@@ -304,7 +280,7 @@ function ProductList() {
             )
             }
 
-            <div className={`cartItem-container ${showCartList ? 'visible' : ''}`}>
+            <div id="cart" className={"cartItem-container"}>
                 <CartItem />
             </div>
         </div>
